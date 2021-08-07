@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "812355039990",
+    "project_id": "smartado-2a192",
+    "storage_bucket": "smartado-2a192.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:812355039990:android:97fa81c34ad2f14ae532d7",
+        "android_client_info": {
+          "package_name": "com.ninjaasmoke.smartado"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "812355039990-sop45c8jugbqhego2rm0391a3at3kaku.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ninjaasmoke.smartado",
+            "certificate_hash": "28ce09a58d0cc0575e9038593368745f8fcf135f"
+          }
+        },
+        {
+          "client_id": "812355039990-racl2rvpr0mcr1ca8pokr31pd716t81q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMlh44RoEMs3sQWQCM4bmcXahwpZkd-i0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "812355039990-racl2rvpr0mcr1ca8pokr31pd716t81q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
