@@ -65,7 +65,18 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   @override
   Stream<UserState> mapEventToState(UserEvent event) async* {
-    if (event is LoginUserEvent) {
+    if (event is FetchUserEvent) {
+      yield LoadingUserState(loadingMessage: 'Logging in...');
+      try {
+        User? user = await signInWithGoogle();
+        FireStoreService _fireStore = FireStoreService();
+        AppUser _appUser = await _fireStore.getUser(user!.uid);
+        currentUser = _appUser;
+        yield LoggedInUserState(user: _appUser);
+      } catch (e) {
+        yield ErrorUserState(errorMessage: 'Error logging in: $e');
+      }
+    } else if (event is LoginUserEvent) {
       yield LoadingUserState(loadingMessage: 'Logging in...');
       try {
         User? user = await signInWithGoogle();
