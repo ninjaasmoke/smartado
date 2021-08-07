@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smartado/Models/UserModel.dart';
 import 'package:smartado/Services/auth.dart';
 import 'package:smartado/Services/store.dart';
@@ -66,13 +67,20 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   @override
   Stream<UserState> mapEventToState(UserEvent event) async* {
     if (event is FetchUserEvent) {
-      yield LoadingUserState(loadingMessage: 'Logging in...');
+      yield LoadingUserState(loadingMessage: '');
       try {
-        User? user = await signInWithGoogle();
-        FireStoreService _fireStore = FireStoreService();
-        AppUser _appUser = await _fireStore.getUser(user!.uid);
-        currentUser = _appUser;
-        yield LoggedInUserState(user: _appUser);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        bool? isLoggedIn = prefs.getBool('isLoggedIn');
+        if (isLoggedIn == true) {
+          yield LoadingUserState(loadingMessage: 'Logging in...');
+          User? user = await signInWithGoogle();
+          FireStoreService _fireStore = FireStoreService();
+          AppUser _appUser = await _fireStore.getUser(user!.uid);
+          currentUser = _appUser;
+          yield LoggedInUserState(user: _appUser);
+        } else {
+          yield LoggedOutUserState(loggedOutMessage: 'You are not logged in.');
+        }
       } catch (e) {
         yield ErrorUserState(errorMessage: 'Error logging in: $e');
       }
@@ -102,6 +110,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
             user: _appUser,
           );
         }
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setBool('isLoggedIn', true);
       } catch (e) {
         yield ErrorUserState(errorMessage: 'Error logging in: $e');
       }
@@ -120,6 +130,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           userType: 1,
         );
         yield LoggedOutUserState(loggedOutMessage: 'Logged out!');
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setBool('isLoggedIn', false);
       } catch (e) {
         yield ErrorUserState(errorMessage: 'Error logging out: $e');
       }

@@ -6,6 +6,7 @@ import 'package:smartado/Bloc/UserBloc.dart';
 import 'package:smartado/Pages/App.dart';
 import 'package:smartado/Pages/Login.dart';
 import 'package:smartado/Pages/NewUser.dart';
+import 'package:smartado/contants.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,20 +27,28 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         theme: ThemeData(
+          scaffoldBackgroundColor: bgColor,
           appBarTheme: AppBarTheme(
-              elevation: 0,
-              backgroundColor: Colors.white,
-              titleTextStyle: TextStyle(
-                color: Colors.black,
+            elevation: 0,
+            backgroundColor: bgColor,
+            titleTextStyle: TextStyle(
+              color: primaryTextColor,
+            ),
+            centerTitle: true,
+            iconTheme: IconThemeData(
+              color: primaryTextColor,
+            ),
+            textTheme: TextTheme(
+              headline6: GoogleFonts.raleway(
+                color: primaryTextColor,
+                fontSize: 20.0,
+                fontWeight: FontWeight.w500,
               ),
-              centerTitle: true,
-              textTheme: TextTheme(
-                headline6: GoogleFonts.raleway(
-                  color: Colors.black,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              )),
+            ),
+          ),
+          accentColor: accentColor,
+          primarySwatch: swatch,
+          primaryColor: accentColor,
           fontFamily: GoogleFonts.raleway().fontFamily,
         ),
         home: BlocConsumer<UserBloc, UserState>(
@@ -56,7 +65,7 @@ class MyApp extends StatelessWidget {
             return LoginPage();
           },
           listener: (context, state) {
-            if (state is LoadingUserState) {
+            if (state is LoadingUserState && state.loadingMessage.isNotEmpty) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(state.loadingMessage),
@@ -66,6 +75,12 @@ class MyApp extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(state.errorMessage),
+                ),
+              );
+            } else if (state is LoggedOutUserState) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.loggedOutMessage),
                 ),
               );
             }
